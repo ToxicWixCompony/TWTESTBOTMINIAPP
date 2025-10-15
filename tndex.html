@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مینی اپ تلگرام من</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #0077b3;
+        }
+        #userInfo {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>👋 سلام به مینی اپ من خوش آمدی!</h1>
+        <p>این یک صفحه وب ساده است که داخل تلگرام اجرا شده است.</p>
+        
+        <div id="userInfo">
+            <p>در حال دریافت اطلاعات کاربر...</p>
+        </div>
+
+        <button onclick="sendDataToBot()">ارسال پیام به ربات</button>
+    </div>
+
+    <!-- اسکریپت تلگرام که به صورت خودکار به صفحه اضافه می‌شود -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <script>
+        // منتظر می‌مانیم تا اسکریپت تلگرام کاملاً بارگذاری شود
+        window.Telegram.WebApp.ready();
+
+        // اپلیکیشن را به اندازه کل صفحه تلگرام باز می‌کند
+        window.Telegram.WebApp.expand();
+
+        // گرفتن اطلاعات کاربر از تلگرام
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        const userInfoDiv = document.getElementById('userInfo');
+
+        if (user) {
+            userInfoDiv.innerHTML = `
+                <strong>اطلاعات شما:</strong><br>
+                نام: ${user.first_name} ${user.last_name || ''}<br>
+                نام کاربری: @${user.username || 'ندارد'}<br>
+                آیدی: ${user.id}
+            `;
+        } else {
+            userInfoDiv.innerHTML = "<p>اطلاعات کاربر در دسترس نیست. این اپ باید از داخل تلگرام باز شود.</p>";
+        }
+
+        // تابعی برای ارسال داده به ربات
+        function sendDataToBot() {
+            const dataToSend = "سلام از طرف مینی اپ! زمان: " + new Date().toLocaleTimeString();
+            
+            // این تابع داده را به ربات ارسال می‌کند و هندلر on_web_app_data را فعال می‌کند
+            window.Telegram.WebApp.sendData(dataToSend);
+            
+            // نمایش پیام به کاربر
+            alert("داده به ربات ارسال شد!");
+        }
+    </script>
+
+</body>
+</html>
